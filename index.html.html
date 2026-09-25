@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnóstico Estratégico FODA Ponderado</title>
+<style>
+:root{--bg:#f7f4ee;--card:#fff;--ink:#222;--muted:#6c675f;--accent:#9a6b3f;--line:#e6ddd2;--ok:#2f7655;--warn:#a65f35}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:34px 20px 20px;max-width:980px;margin:auto}.brand{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:800}
+h1{font-size:clamp(28px,5vw,48px);margin:8px 0 8px;line-height:1.05}.lead{color:var(--muted);max-width:760px;line-height:1.55}
+main{max-width:980px;margin:auto;padding:0 20px 60px}.progress-wrap{position:sticky;top:0;background:rgba(247,244,238,.94);backdrop-filter:blur(8px);padding:12px 0;z-index:4}
+.progress{height:9px;background:#e8e0d7;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:var(--accent);transition:.25s}.steptext{font-size:12px;color:var(--muted);margin-top:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;margin-top:16px;box-shadow:0 10px 30px rgba(70,50,30,.05)}
+h2{margin:0 0 8px}.hint{color:var(--muted);font-size:14px;line-height:1.5}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+label{display:block;font-weight:700;font-size:14px;margin-top:14px}input,textarea,select{width:100%;margin-top:6px;padding:12px 13px;border:1px solid #d8cfc5;border-radius:11px;background:#fff;font:inherit;color:inherit}textarea{min-height:95px;resize:vertical}
+button{border:0;border-radius:11px;padding:12px 17px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:#fff}.secondary{background:#eee6dd;color:#4e4034}.actions{display:flex;justify-content:space-between;gap:10px;margin-top:22px}.hidden{display:none!important}
+.factor{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}.factorhead{display:flex;justify-content:space-between;gap:10px;align-items:center}.pill{font-size:11px;padding:5px 9px;border-radius:99px;background:#f1ebe4;color:#6d5138;font-weight:800}
+.three{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:10px}.evidence{font-size:12px;color:var(--muted);margin-top:5px}
+.result-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.score{padding:15px;border-radius:14px;background:#f8f5f1;border:1px solid var(--line)}.score b{font-size:24px;display:block;margin-top:4px}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:10px 8px;vertical-align:top}
+.strategy{border-left:4px solid var(--accent);padding:10px 14px;margin:10px 0;background:#faf7f3;border-radius:0 10px 10px 0}
+.notice{padding:12px;border-radius:10px;background:#fff7e8;border:1px solid #ecd8ad;font-size:13px;line-height:1.45}
+@media(max-width:700px){.grid,.three,.result-grid{grid-template-columns:1fr}.card{padding:18px}}
+@media print{.progress-wrap,.actions,.no-print{display:none!important}body{background:#fff}.card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header>
+<div class="brand">Artefacto tecnológico · Diagnóstico empresarial</div>
+<h1>FODA Ponderado Guiado</h1>
+<p class="lead">Convierte percepciones empresariales en un diagnóstico estructurado: solicita evidencia, pondera la importancia de cada factor, calcula resultados y propone estrategias FO, FA, DO y DA.</p>
+</header>
+<main>
+<div class="progress-wrap"><div class="progress"><div class="bar" id="bar"></div></div><div class="steptext" id="steptext"></div></div>
+
+<section class="card step" data-step="0">
+<h2>1. Contexto de la empresa</h2>
+<p class="hint">Primero necesitamos saber qué empresa se analiza y qué objetivo quiere alcanzar. Esto ayuda a interpretar los factores estratégicos.</p>
+<div class="grid">
+<div><label>Empresa o proyecto<input id="company" placeholder="Ej. NAPA Studio"></label></div>
+<div><label>Sector<input id="sector" placeholder="Ej. Belleza y cuidado personal"></label></div>
+</div>
+<label>Objetivo estratégico<textarea id="objective" placeholder="Ej. aumentar clientes recurrentes y reducir tiempos de atención durante los próximos 6 meses."></textarea></label>
+<label>Periodo del diagnóstico<select id="period"><option>Próximos 3 meses</option><option selected>Próximos 6 meses</option><option>Próximos 12 meses</option><option>Más de 12 meses</option></select></label>
+<div class="actions"><span></span><button class="primary" onclick="next()">Continuar</button></div>
+</section>
+
+<section class="card step hidden" data-step="1">
+<h2>2. Factores internos</h2>
+<p class="hint">Registra fortalezas y debilidades. Evita frases generales: incluye un dato, indicador, registro, encuesta u observación verificable.</p>
+<div id="internal"></div>
+<div class="actions"><button class="secondary" onclick="prev()">Atrás</button><button class="primary" onclick="next()">Continuar</button></div>
+</section>
+
+<section class="card step hidden" data-step="2">
+<h2>3. Factores externos</h2>
+<p class="hint">Registra oportunidades y amenazas del entorno: clientes, competencia, economía, tecnología, regulación, tendencias u otros factores externos.</p>
+<div id="external"></div>
+<div class="actions"><button class="secondary" onclick="prev()">Atrás</button><button class="primary" onclick="next()">Continuar</button></div>
+</section>
+
+<section class="card step hidden" data-step="3">
+<h2>4. Revisión de calidad</h2>
+<p class="hint">Antes de calcular, el artefacto revisa si cada factor tiene evidencia y una ponderación. La ponderación expresa qué tan importante es el factor para el objetivo.</p>
+<div class="notice">Escala de calificación: <b>1 = situación muy desfavorable</b>, 2 = desfavorable, 3 = intermedia, 4 = favorable y <b>5 = muy favorable</b>. En debilidades y amenazas, una calificación alta significa que la empresa está mejor preparada frente a ese factor.</div>
+<div id="review"></div>
+<div class="actions"><button class="secondary" onclick="prev()">Atrás</button><button class="primary" onclick="generate()">Generar diagnóstico</button></div>
+</section>
+
+<section class="card step hidden" data-step="4" id="results">
+<h2>Informe estratégico</h2>
+<p class="hint" id="summary"></p>
+<div class="result-grid" id="scores"></div>
+<h3>Factores y calificaciones ponderadas</h3>
+<div style="overflow:auto"><table><thead><tr><th>Tipo</th><th>Factor</th><th>Evidencia</th><th>Peso</th><th>Calif.</th><th>Puntaje</th></tr></thead><tbody id="tbody"></tbody></table></div>
+<h3>Lectura del diagnóstico</h3><div id="reading"></div>
+<h3>Estrategias sugeridas</h3><p class="hint">Son propuestas iniciales generadas a partir de los factores con mayor peso. Deben validarse con datos, responsables, recursos y metas antes de ejecutarse.</p><div id="strategies"></div>
+<div class="actions no-print"><button class="secondary" onclick="restart()">Editar diagnóstico</button><button class="primary" onclick="window.print()">Imprimir / guardar PDF</button></div>
+</section>
+</main>
+<script>
+let step=0;
+const types=[
+ {key:'S',name:'Fortaleza',where:'internal'},
+ {key:'W',name:'Debilidad',where:'internal'},
+ {key:'O',name:'Oportunidad',where:'external'},
+ {key:'T',name:'Amenaza',where:'external'}
+];
+const data={S:[],W:[],O:[],T:[]};
+
+function factorHTML(t,i){
+ return `<div class="factor"><div class="factorhead"><b>${t.name} ${i+1}</b><span class="pill">${t.key}</span></div>
+ <label>Factor<textarea id="${t.key}f${i}" placeholder="${placeholder(t.key,i)}"></textarea></label>
+ <label>Evidencia o fuente<textarea id="${t.key}e${i}" placeholder="Ej. encuesta a 80 clientes: 87% calificó el servicio con 4 o 5; reporte de ventas; registro de tiempos; fuente externa y fecha."></textarea></label>
+ <div class="three"><label>Importancia (peso %)<input id="${t.key}w${i}" type="number" min="0" max="100" value="${i==0?20:15}"></label>
+ <label>Calificación (1–5)<select id="${t.key}r${i}"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></label>
+ <label>Confianza de evidencia<select id="${t.key}c${i}"><option value="0.6">Baja</option><option value="0.8" selected>Media</option><option value="1">Alta</option></select></label></div>
+ <div class="evidence">La confianza no altera la calificación oficial; se usa como señal de calidad para advertir qué factores necesitan mejor evidencia.</div></div>`;
+}
+function placeholder(k,i){
+ const p={S:['Ej. 62% de clientes vuelve a comprar','Ej. tiempo promedio de servicio menor al competidor'],
+ W:['Ej. 18% de citas presenta retrasos','Ej. dependencia de un solo proveedor'],
+ O:['Ej. crecimiento de búsquedas locales del servicio','Ej. nuevo segmento de clientes en la zona'],
+ T:['Ej. entrada de dos competidores en 6 meses','Ej. incremento documentado en costo de insumos']}; return p[k][i];
+}
+function build(){
+ types.forEach(t=>{
+  const el=document.getElementById(t.where);
+  const wrap=document.createElement('div'); wrap.innerHTML=`<h3>${t.name}s</h3>`+factorHTML(t,0)+factorHTML(t,1); el.appendChild(wrap);
+ });
+ update();
+}
+function collect(){
+ types.forEach(t=>{data[t.key]=[0,1].map(i=>({
+  factor:document.getElementById(`${t.key}f${i}`).value.trim(),
+  evidence:document.getElementById(`${t.key}e${i}`).value.trim(),
+  weight:+document.getElementById(`${t.key}w${i}`).value||0,
+  rating:+document.getElementById(`${t.key}r${i}`).value,
+  confidence:+document.getElementById(`${t.key}c${i}`).value
+ }))});
+}
+function next(){
+ if(step===0 && !document.getElementById('company').value.trim()){alert('Escribe el nombre de la empresa o proyecto.');return}
+ if(step===1||step===2) collect();
+ if(step===2) makeReview();
+ step++; update();
+}
+function prev(){step--;update()}
+function update(){
+ document.querySelectorAll('.step').forEach((x,i)=>x.classList.toggle('hidden',i!==step));
+ document.getElementById('bar').style.width=((step+1)/5*100)+'%';
+ document.getElementById('steptext').textContent=`Paso ${step+1} de 5`;
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function makeReview(){
+ collect(); let html='';
+ types.forEach(t=>data[t.key].forEach((x,i)=>{
+  let flags=[];
+  if(!x.factor)flags.push('Falta describir el factor');
+  if(!x.evidence)flags.push('Falta evidencia');
+  if(x.weight<=0)flags.push('Peso no definido');
+  html+=`<div class="factor"><b>${t.name} ${i+1}:</b> ${x.factor||'<em>sin completar</em>'}<br><span class="hint">Peso: ${x.weight}% · Calificación: ${x.rating}/5 · Evidencia: ${x.evidence?'registrada':'no registrada'} ${flags.length?'· ⚠ '+flags.join(', '):'· ✓ listo'}</span></div>`;
+ }));
+ document.getElementById('review').innerHTML=html;
+}
+function generate(){
+ collect();
+ const missing=types.flatMap(t=>data[t.key]).some(x=>!x.factor||!x.evidence||x.weight<=0);
+ if(missing&&!confirm('Hay factores sin descripción, evidencia o peso. El resultado será menos sólido. ¿Generar de todos modos?'))return;
+ const company=document.getElementById('company').value.trim();
+ const objective=document.getElementById('objective').value.trim()||'el objetivo estratégico indicado';
+ const scoreFor=k=>{
+   const a=data[k].filter(x=>x.factor); const sw=a.reduce((s,x)=>s+x.weight,0);
+   return sw? a.reduce((s,x)=>s+x.weight*x.rating,0)/sw : 0;
+ };
+ const sc={S:scoreFor('S'),W:scoreFor('W'),O:scoreFor('O'),T:scoreFor('T')};
+ document.getElementById('summary').innerHTML=`Diagnóstico de <b>${esc(company)}</b> orientado a <b>${esc(objective)}</b>. Los puntajes se presentan en escala 1–5 y consideran el peso relativo declarado para cada factor.`;
+ document.getElementById('scores').innerHTML=types.map(t=>`<div class="score">${t.name}<b>${sc[t.key].toFixed(2)}</b><span class="hint">de 5</span></div>`).join('');
+ let rows='';
+ types.forEach(t=>data[t.key].filter(x=>x.factor).sort((a,b)=>b.weight-a.weight).forEach(x=>{
+   rows+=`<tr><td>${t.name}</td><td>${esc(x.factor)}</td><td>${esc(x.evidence)}</td><td>${x.weight}%</td><td>${x.rating}/5</td><td>${(x.weight*x.rating/100).toFixed(2)}</td></tr>`;
+ }));
+ document.getElementById('tbody').innerHTML=rows;
+ const internal=(sc.S+sc.W)/2, external=(sc.O+sc.T)/2;
+ document.getElementById('reading').innerHTML=`<p>El promedio interno es <b>${internal.toFixed(2)}/5</b> y el externo es <b>${external.toFixed(2)}/5</b>. ${internal>=3?'Los factores internos registrados muestran una posición relativamente favorable':'Los factores internos registrados muestran áreas que requieren atención prioritaria'}. ${external>=3?'La empresa registra una respuesta relativamente favorable frente a su entorno':'El entorno registrado presenta presión o preparación insuficiente frente a oportunidades y amenazas'}.</p>`;
+ const top=k=>data[k].filter(x=>x.factor).sort((a,b)=>(b.weight*b.rating)-(a.weight*a.rating))[0];
+ const weak=k=>data[k].filter(x=>x.factor).sort((a,b)=>(b.weight*(6-b.rating))-(a.weight*(6-a.rating)))[0];
+ const S=top('S'),O=top('O'),W=weak('W'),T=weak('T');
+ const strategies=[];
+ if(S&&O) strategies.push(['FO — Crecimiento',`Aprovechar “${S.factor}” para capturar la oportunidad “${O.factor}”. Definir una acción, responsable, indicador y fecha de revisión.`]);
+ if(S&&T) strategies.push(['FA — Protección',`Utilizar “${S.factor}” como capacidad defensiva frente a “${T.factor}”. Preparar un plan preventivo y medir su efecto.`]);
+ if(W&&O) strategies.push(['DO — Mejora',`Corregir o reducir “${W.factor}” para poder aprovechar “${O.factor}”. Priorizar recursos según impacto y urgencia.`]);
+ if(W&&T) strategies.push(['DA — Contención',`Reducir la exposición conjunta de “${W.factor}” y “${T.factor}”. Diseñar controles, alternativas y un indicador de riesgo.`]);
+ document.getElementById('strategies').innerHTML=strategies.map(s=>`<div class="strategy"><b>${esc(s[0])}</b><br>${esc(s[1])}</div>`).join('');
+ step=4;update();
+}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function restart(){step=0;update()}
+build();
+</script>
+</body>
+</html>
